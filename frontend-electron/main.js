@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const axios = require('axios');
 const keytar = require('keytar');
@@ -12,6 +12,16 @@ function resetInactivityTimeout() {
   inactivityTimeout = setTimeout(() => {
       mainWindow.webContents.send('user-inactive');
   }, INACTIVITY_LIMIT);
+}
+
+async function alert(title) {
+  const response = await dialog.showMessageBox({
+    type: 'info',
+    buttons: ['OK'],
+    title: title,
+    message: title || ""
+  });
+  return response.response
 }
 
 function createLoginWindow() {
@@ -44,10 +54,10 @@ function createMainWindow() {
 ipcMain.handle('signup', async (event, credentials) => {
   try {
     const response = await axios.post(`${apiBaseUrl}/signup`, credentials);
-    alert("Sign up Successfull!")
+    await alert("Sign up Successfull!")
     return response.data;
   } catch (error) {
-    alert('Signup failed:', error);
+    await alert('Signup failed:', error);
     return { error: 'Signup failed' };
   }
 });
@@ -61,7 +71,7 @@ ipcMain.handle('login', async (event, credentials) => {
     console.log(response.data)
     console.log(token)
     await keytar.setPassword('ElectronApp', 'auth-token', token);
-    alert("Login Successfull!")
+    await alert("Login Successfull!")
     loginWindow.close();
     createMainWindow();
     return { success: true };
