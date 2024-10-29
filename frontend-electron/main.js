@@ -1,9 +1,19 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+let inactivityTimeout;
+const INACTIVITY_LIMIT = 1 * 60 * 1e3;
+let mainWindow;
+
+function resetInactivityTimeout() {
+  clearTimeout(inactivityTimeout);
+  inactivityTimeout = setTimeout(() => {
+      mainWindow.webContents.send('user-inactive');
+  }, INACTIVITY_LIMIT);
+}
 
 // Function to create the Electron window
 function createWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -13,11 +23,15 @@ function createWindow() {
     }
   });
 
+  mainWindow.webContents.on('before-input-event', resetInactivityTimeout);
+
+  resetInactivityTimeout();
+
   // Load the HTML file into the Electron window
-  win.loadFile('index.html');
+  mainWindow.loadFile('index.html');
 
   // Open DevTools for debugging
-  // win.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 }
 
 // Electron app ready event to create the window

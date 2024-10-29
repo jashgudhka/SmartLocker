@@ -1,5 +1,7 @@
 const axios = require('axios');
+const { ipcRenderer } = require('electron');
 
+    
 // Base URL for your backend
 const BASE_URL = 'http://localhost:3000';
 
@@ -30,6 +32,15 @@ showSignup.addEventListener('click', () => {
 showLogin.addEventListener('click', () => {
     signupForm.style.display = 'none';
     loginForm.style.display = 'block';
+});
+
+ipcRenderer.on('user-inactive', () => {
+    alert('User has been inactive for 10 minutes.');
+    loginForm.style.display = 'block';
+    signupForm.style.display = 'none';
+    uploadSection.style.display = 'none';
+    receiveSection.style.display = 'none';
+    logoutBtn.style.display = 'none';
 });
 
 // Signup functionality
