@@ -67,10 +67,20 @@ const chatHistory = new mongoose.Schema({
   content: String
 })
 
+const fileLog = new mongoose.Schema({
+  timestamp: { type: Date, default: Date.now },
+  from: String,
+  to: String,
+  file_path: String,
+  fname: String,
+  expiry_date: Date
+})
+
 const User = mongoose.model('User', userSchema);
 const File = mongoose.model('File', fileSchema);
 const Session = mongoose.model('Session', sessionSchema);
 const chat = mongoose.model('chatHistory', chatHistory);
+const fileLogs = mongoose.model('fileLogs', fileLog);
 
 // Middleware for JWT authentication
 const authenticateJWT = (req, res, next) => {
