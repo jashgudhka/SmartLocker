@@ -35,7 +35,7 @@ showLogin.addEventListener('click', () => {
 });
 
 ipcRenderer.on('user-inactive', () => {
-    alert('User has been inactive for 10 minutes.');
+    alert('User has been inactive for 10 minutes. \nLog in again.');
     loginForm.style.display = 'block';
     signupForm.style.display = 'none';
     uploadSection.style.display = 'none';

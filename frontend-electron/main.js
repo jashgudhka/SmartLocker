@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 let inactivityTimeout;
-const INACTIVITY_LIMIT = 1 * 60 * 1e3;
+const INACTIVITY_LIMIT = 10 * 60 * 1e3;
 let mainWindow;
 
 function resetInactivityTimeout() {
